@@ -1,0 +1,11 @@
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS tokens;
+DROP TABLE IF EXISTS category;
+DROP TABLE IF EXISTS chicken;
+DROP TABLE IF EXISTS transaction;
+DROP TABLE IF EXISTS chicken_history;
+DROP TYPE IF EXISTS transaction_type;
+DROP TYPE IF EXISTS chicken_type;
+DROP TYPE IF EXISTS reason_type;
+DROP EXTENSION IF EXISTS "uuid-ossp";
+DROP EXTENSION IF EXISTS "citext";
