@@ -64,8 +64,6 @@ func main() {
 
 	flag.Parse()
 
-	slog.Info("DB DSN", "dsn", cfg.db.dsn)
-
 	dbConn, err := openDB(cfg)
 	if err != nil {
 		slog.Error("error opening db", "error", err)
