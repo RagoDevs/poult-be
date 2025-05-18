@@ -140,7 +140,7 @@ func (app *application) createPasswordResetTokenHandler(c echo.Context) error {
 			Timeout: 10 * time.Second,
 		}
 
-		req, err := http.NewRequest("POST", fmt.Sprintf("%s/rent-resetpwd", app.config.mailer_url), bytes.NewBuffer(jsonData))
+		req, err := http.NewRequest("POST", fmt.Sprintf("%s/resetpwd", app.config.mailer_url), bytes.NewBuffer(jsonData))
 		if err != nil {
 			slog.Error("Error creating request", "Error", err)
 		}
@@ -224,7 +224,7 @@ func (app *application) resendActivationTokenHandler(c echo.Context) error {
 			Timeout: 10 * time.Second,
 		}
 
-		req, err := http.NewRequest("POST", fmt.Sprintf("%s/rent-activate", app.config.mailer_url), bytes.NewBuffer(jsonData))
+		req, err := http.NewRequest("POST", fmt.Sprintf("%s/activate", app.config.mailer_url), bytes.NewBuffer(jsonData))
 		if err != nil {
 			slog.Error("Error creating request", "Error", err)
 		}

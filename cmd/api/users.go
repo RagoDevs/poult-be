@@ -105,7 +105,7 @@ func (app *application) registerUserHandler(c echo.Context) error {
 			Timeout: 10 * time.Second,
 		}
 
-		req, err := http.NewRequest("POST", fmt.Sprintf("%s/rent-signup", app.config.mailer_url), bytes.NewBuffer(jsonData))
+		req, err := http.NewRequest("POST", fmt.Sprintf("%s/signup", app.config.mailer_url), bytes.NewBuffer(jsonData))
 		if err != nil {
 			slog.Error("Error creating request", "Error", err)
 		}
@@ -282,7 +282,7 @@ func (app *application) updateUserPasswordOnResetHandler(c echo.Context) error {
 			Timeout: 10 * time.Second,
 		}
 
-		req, err := http.NewRequest("POST", fmt.Sprintf("%s/rent-completedpwdreset", app.config.mailer_url), bytes.NewBuffer(jsonData))
+		req, err := http.NewRequest("POST", fmt.Sprintf("%s/completedpwdreset", app.config.mailer_url), bytes.NewBuffer(jsonData))
 		if err != nil {
 			slog.Error("Error creating request", "Error", err)
 		}
