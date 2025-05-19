@@ -13,6 +13,7 @@ import (
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 	"gopkg.in/go-playground/validator.v9"
+	"github.com/RagoDevs/poult-be/mail"
 )
 
 
@@ -37,6 +38,7 @@ type application struct {
 	wg        sync.WaitGroup
 	store     db.Store
 	validator *validator.Validate
+	mailer    *mail.Mailer
 }
 
 func init() {
@@ -51,6 +53,7 @@ func init() {
 
 func main() {
 	var cfg config
+	var ml mail.Mailer
 
 	flag.IntVar(&cfg.port, "port", 5055, "API server port")
 	flag.StringVar(&cfg.env, "env", os.Getenv("ENV_STAGE"), "Environment (development|Staging|production")
@@ -61,6 +64,10 @@ func main() {
 	flag.StringVar(&cfg.db.maxIdleTime, "db-max-idle-time", "15m", "PostgreSQL max connection  connections")
 	flag.StringVar(&cfg.emails, "admin-email", os.Getenv("ADMIN_EMAIL"), "admin email")
 	flag.StringVar(&cfg.mailer_url, "mail-url", os.Getenv("MAIL_URL"), "mail url ")
+	flag.StringVar(&ml.Host, "MAIL HOST", os.Getenv("EMAIL_HOST"), "MAIL HOST")
+	flag.StringVar(&ml.Port, "MAIL PORT", os.Getenv("EMAIL_PORT"), "MAIL PORT")
+	flag.StringVar(&ml.User, "MAIL USER ", os.Getenv("EMAIL_USER"), "MAIL USER")
+	flag.StringVar(&ml.Pwd, "MAIL PASSWORD", os.Getenv("EMAIL_PASS"), "MAIL PWD")
 
 	flag.Parse()
 
@@ -78,6 +85,7 @@ func main() {
 		config:    cfg,
 		store:     db.NewStore(dbConn),
 		validator: validator.New(),
+		mailer:    mail.NewMailer(ml.User, ml.Pwd, ml.Host, ml.Port),
 	}
 
 	err = app.serve()
