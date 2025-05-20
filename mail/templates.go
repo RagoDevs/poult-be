@@ -133,7 +133,7 @@ const welcome_template = `
             <p>To complete your registration and access all features of our platform, please activate your account by clicking the button below:</p>
             
             <div style="text-align: center;">
-                <a href="https://kuku.ragodevs.com/activate?token={{.Token}}" class="button">Activate Account</a>
+                <a href="https://kuku.ragodevs.com/activate-account?token={{.Token}}" class="button">Activate Account</a>
             </div>
             
             <div class="important-note">
