@@ -1,5 +1,5 @@
 -- name: GetUserByEmail :one
-SELECT id, created_at, email, password_hash, activated
+SELECT id, created_at, name, email, password_hash, activated
 FROM users
 WHERE email = $1;
 

@@ -80,25 +80,18 @@ func (q *Queries) GetHashTokenForUser(ctx context.Context, arg GetHashTokenForUs
 }
 
 const getUserByEmail = `-- name: GetUserByEmail :one
-SELECT id, created_at, email, password_hash, activated
+SELECT id, created_at, name, email, password_hash, activated
 FROM users
 WHERE email = $1
 `
 
-type GetUserByEmailRow struct {
-	ID           uuid.UUID `json:"id"`
-	CreatedAt    time.Time `json:"created_at"`
-	Email        string    `json:"email"`
-	PasswordHash []byte    `json:"password_hash"`
-	Activated    bool      `json:"activated"`
-}
-
-func (q *Queries) GetUserByEmail(ctx context.Context, email string) (GetUserByEmailRow, error) {
+func (q *Queries) GetUserByEmail(ctx context.Context, email string) (User, error) {
 	row := q.db.QueryRowContext(ctx, getUserByEmail, email)
-	var i GetUserByEmailRow
+	var i User
 	err := row.Scan(
 		&i.ID,
 		&i.CreatedAt,
+		&i.Name,
 		&i.Email,
 		&i.PasswordHash,
 		&i.Activated,

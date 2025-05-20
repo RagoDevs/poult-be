@@ -13,7 +13,7 @@ type Querier interface {
 	CreateUser(ctx context.Context, arg CreateUserParams) (CreateUserRow, error)
 	DeleteAllToken(ctx context.Context, arg DeleteAllTokenParams) error
 	GetHashTokenForUser(ctx context.Context, arg GetHashTokenForUserParams) (GetHashTokenForUserRow, error)
-	GetUserByEmail(ctx context.Context, email string) (GetUserByEmailRow, error)
+	GetUserByEmail(ctx context.Context, email string) (User, error)
 	UpdateUser(ctx context.Context, arg UpdateUserParams) (UpdateUserRow, error)
 }
 
