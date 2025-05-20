@@ -124,6 +124,7 @@ func (app *application) createPasswordResetTokenHandler(c echo.Context) error {
 	app.background(func() {
 
 		dt := mail.ActivateOrResetData{
+			Name:  user.Name,
 			Email: user.Email,
 			Token: token.Plaintext,
 		}
@@ -179,6 +180,7 @@ func (app *application) resendActivationTokenHandler(c echo.Context) error {
 	app.background(func() {
 
 		dt := mail.ActivateOrResetData{
+			Name: user.Name,
 			Email: user.Email,
 			Token: token.Plaintext,
 		}

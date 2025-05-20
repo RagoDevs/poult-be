@@ -282,12 +282,13 @@ const activate_template = `
         </div>
         
         <div class="content">
+            <p>Hello {{.Name}},</p>
             <h3 style="color: #4361ee; margin-top: 0;">Important: Please Activate Your Account</h3>
             
             <p>Your account requires activation to continue using our services. Please click the button below to activate:</p>
             
             <div style="text-align: center;">
-                <a href="https://kuku.ragodevs.com/activate?token={{.Token}}" class="button">Activate Account</a>
+                <a href="https://kuku.ragodevs.com/activate-account?token={{.Token}}" class="button">Activate Account</a>
             </div>
             
             <div class="important-note">
