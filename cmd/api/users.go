@@ -29,6 +29,7 @@ type ResetCompleteData struct {
 func (app *application) registerUserHandler(c echo.Context) error {
 
 	var input struct {
+		Name     string `json:"name" validate:"required"`
 		Email    string `json:"email" validate:"required,email"`
 		Password string `json:"password" validate:"required,min=8"`
 	}
@@ -57,6 +58,7 @@ func (app *application) registerUserHandler(c echo.Context) error {
 	}
 
 	args := db.CreateUserParams{
+		Name:         input.Name,
 		Email:        input.Email,
 		PasswordHash: pwd.Hash,
 		Activated:    false,
