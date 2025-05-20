@@ -18,7 +18,7 @@ RETURNING id, created_at;
 
 
 -- name: GetHashTokenForUser :one
-SELECT users.id, users.created_at,users.email, users.password_hash,users.activated
+SELECT users.id, users.created_at,users.email, users.name, users.password_hash,users.activated
 FROM users
 INNER JOIN token
 ON users.id = token.user_id

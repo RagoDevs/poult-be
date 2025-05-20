@@ -43,7 +43,7 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (CreateU
 }
 
 const getHashTokenForUser = `-- name: GetHashTokenForUser :one
-SELECT users.id, users.created_at,users.email, users.password_hash,users.activated
+SELECT users.id, users.created_at,users.email, users.name, users.password_hash,users.activated
 FROM users
 INNER JOIN token
 ON users.id = token.user_id
@@ -62,6 +62,7 @@ type GetHashTokenForUserRow struct {
 	ID           uuid.UUID `json:"id"`
 	CreatedAt    time.Time `json:"created_at"`
 	Email        string    `json:"email"`
+	Name         string    `json:"name"`
 	PasswordHash []byte    `json:"password_hash"`
 	Activated    bool      `json:"activated"`
 }
@@ -73,6 +74,7 @@ func (q *Queries) GetHashTokenForUser(ctx context.Context, arg GetHashTokenForUs
 		&i.ID,
 		&i.CreatedAt,
 		&i.Email,
+		&i.Name,
 		&i.PasswordHash,
 		&i.Activated,
 	)
