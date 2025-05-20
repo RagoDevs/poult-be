@@ -23,20 +23,17 @@ func NewMailer(user, pwd, host, port string) *Mailer {
 	}
 }
 
-
 type SignupData struct {
-    ID    string `json:"id" validate:"required"`
-    Email string `json:"email" validate:"required,email"`
-    Token string `json:"token" validate:"required"`
-}
 
+	Name string
+	Email string
+	Token string
+}
 
 type ActivateOrResetData struct {
 	Email string `json:"email" validate:"required,email"`
 	Token string `json:"token" validate:"required"`
 }
-
-
 
 func (m *Mailer) SendWelcomeEmail(data SignupData) error {
 
@@ -64,7 +61,6 @@ func (m *Mailer) SendWelcomeEmail(data SignupData) error {
 	return nil
 }
 
-
 func (m *Mailer) SendActivateEmail(data ActivateOrResetData) error {
 
 	tmpl, err := template.New("email").Parse(activate_template)
@@ -90,7 +86,6 @@ func (m *Mailer) SendActivateEmail(data ActivateOrResetData) error {
 
 	return nil
 }
-
 
 func (m *Mailer) SendPasswordResetEmail(data ActivateOrResetData) error {
 

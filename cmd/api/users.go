@@ -90,7 +90,7 @@ func (app *application) registerUserHandler(c echo.Context) error {
 	app.background(func() {
 
 		dt := mail.SignupData{
-			ID:    a.ID.String(),
+			Name:  args.Name,
 			Email: args.Email,
 			Token: token.Plaintext,
 		}

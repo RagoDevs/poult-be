@@ -121,14 +121,12 @@ const welcome_template = `
         <div class="header">
             <h2>Welcome to Poult</h2>
         </div>
+
+        
         
         <div class="content">
+            <p>Hello {{.Name}},</p>
             <p>Thank you for choosing Poult for your poultry management needs. We're delighted to welcome you to our platform.</p>
-            
-            <div class="field">
-                <p><strong>Your account has been created successfully with the following details:</strong></p>
-                <p><strong class="label">User ID:</strong> {{.ID}}</p>
-            </div>
             
             <h3 style="color: #4361ee; margin-top: 30px;">Important: Please Activate Your Account</h3>
             
