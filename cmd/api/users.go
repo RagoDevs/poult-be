@@ -89,10 +89,11 @@ func (app *application) registerUserHandler(c echo.Context) error {
 
 	app.background(func() {
 
-		dt := mail.SignupData{
+		dt := mail.MailerData{
 			Name:  args.Name,
 			Email: args.Email,
 			Token: token.Plaintext,
+			Url: app.config.frontend_url,
 		}
 
 		if err := app.mailer.SendWelcomeEmail(dt); err != nil {
@@ -238,9 +239,10 @@ func (app *application) updateUserPasswordOnResetHandler(c echo.Context) error {
 
 	app.background(func() {
 
-		dt := mail.ActivateOrResetData{
+		dt := mail.MailerData{
 			Name:  user.Name,
 			Email: user.Email,
+			Url: app.config.frontend_url,
 		}
 
 		if err := app.mailer.SendResetCompletedEmail(dt); err != nil {

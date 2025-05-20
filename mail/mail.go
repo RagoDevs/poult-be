@@ -23,20 +23,14 @@ func NewMailer(user, pwd, host, port string) *Mailer {
 	}
 }
 
-type SignupData struct {
-
+type MailerData struct {
 	Name string
 	Email string
 	Token string
+	Url string
 }
 
-type ActivateOrResetData struct {
-	Name  string
-	Email string `json:"email" validate:"required,email"`
-	Token string `json:"token" validate:"required"`
-}
-
-func (m *Mailer) SendWelcomeEmail(data SignupData) error {
+func (m *Mailer) SendWelcomeEmail(data MailerData) error {
 
 	tmpl, err := template.New("email").Parse(welcome_template)
 	if err != nil {
@@ -62,7 +56,7 @@ func (m *Mailer) SendWelcomeEmail(data SignupData) error {
 	return nil
 }
 
-func (m *Mailer) SendActivateEmail(data ActivateOrResetData) error {
+func (m *Mailer) SendActivateEmail(data MailerData) error {
 
 	tmpl, err := template.New("email").Parse(activate_template)
 	if err != nil {
@@ -88,7 +82,7 @@ func (m *Mailer) SendActivateEmail(data ActivateOrResetData) error {
 	return nil
 }
 
-func (m *Mailer) SendPasswordResetEmail(data ActivateOrResetData) error {
+func (m *Mailer) SendPasswordResetEmail(data MailerData) error {
 
 	tmpl, err := template.New("email").Parse(pwdreset_template)
 	if err != nil {
@@ -114,7 +108,7 @@ func (m *Mailer) SendPasswordResetEmail(data ActivateOrResetData) error {
 	return nil
 }
 
-func (m *Mailer) SendResetCompletedEmail(data ActivateOrResetData) error {
+func (m *Mailer) SendResetCompletedEmail(data MailerData) error {
 
 	tmpl, err := template.New("email").Parse(completedreset_template)
 	if err != nil {

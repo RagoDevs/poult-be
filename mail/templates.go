@@ -133,7 +133,7 @@ const welcome_template = `
             <p>To complete your registration and access all features of our platform, please activate your account by clicking the button below:</p>
             
             <div style="text-align: center;">
-                <a href="https://kuku.ragodevs.com/activate-account?token={{.Token}}" class="button">Activate Account</a>
+                <a href="{{.Url}}/activate-account?token={{.Token}}" class="button">Activate Account</a>
             </div>
             
             <div class="important-note">
@@ -153,7 +153,7 @@ const welcome_template = `
         </div>
         
         <div class="footer">
-            <p><a href="https://kuku.ragodevs.com">kuku.ragodevs.com</a></p>
+            <p><a href="{{.Url}}">{{.Url}}</a></p>
             <p>© 2025 Poult. All rights reserved.</p>
         </div>
     </div>
@@ -288,7 +288,7 @@ const activate_template = `
             <p>Your account requires activation to continue using our services. Please click the button below to activate:</p>
             
             <div style="text-align: center;">
-                <a href="https://kuku.ragodevs.com/activate-account?token={{.Token}}" class="button">Activate Account</a>
+                <a href="{{.Url}}/activate-account?token={{.Token}}" class="button">Activate Account</a>
             </div>
             
             <div class="important-note">
@@ -304,12 +304,12 @@ const activate_template = `
             <p>We look forward to helping you streamline your poultry management operations.</p>
             
             <p>Best regards,<br>
-            The Poult Management System Team</p>
+            The Poult Team</p>
         </div>
         
         <div class="footer">
-            <p><a href="https://kuku.ragodevs.com">kuku.ragodevs.com</a></p>
-            <p>© 2025 Poult Management System. All rights reserved.</p>
+            <p><a href="{{.Url}}">{{.Url}}</a></p>
+            <p>© 2025 Poult. All rights reserved.</p>
         </div>
     </div>
 </body>
@@ -438,12 +438,12 @@ const pwdreset_template = `
         
         <div class="content">
             <p>Hello {{.Name}},</p>
-            <p>We received a request to reset your password for your Poult Management System account. If you did not make this request, you can safely ignore this email.</p>
+            <p>We received a request to reset your password for your Poult account. If you did not make this request, you can safely ignore this email.</p>
             
             <p>To reset your password, please click the button below:</p>
             
             <div style="text-align: center;">
-                <a href="https://kuku.ragodevs.com/reset-password?token={{.Token}}" class="button">Reset Password</a>
+                <a href="{{.Url}}/reset-password?token={{.Token}}" class="button">Reset Password</a>
             </div>
             
             <div class="important-note">
@@ -461,8 +461,8 @@ const pwdreset_template = `
         </div>
         
         <div class="footer">
-            <p><a href="https://kuku.ragodevs.com">kuku.ragodevs.com</a></p>
-            <p>© 2025 Poult Management System. All rights reserved.</p>
+            <p><a href="{{.Url}}">{{.Url}}</a></p>
+            <p>© 2025 Poult. All rights reserved.</p>
         </div>
     </div>
 </body>
@@ -594,7 +594,7 @@ const completedreset_template = `
             <div style="text-align: center; margin-bottom: 20px;">
                 <span style="font-size: 48px; color: #4CAF50;">✓</span>
                 <h3 style="color: #4CAF50; margin-top: 10px;">Success!</h3>
-                <p>You have successfully changed your password for Poult Management System.</p>
+                <p>You have successfully changed your password for Poult.</p>
             </div>
             
             <div class="important-note">
@@ -612,7 +612,7 @@ const completedreset_template = `
         </div>
         
         <div class="footer">
-            <p><a href="https://kuku.ragodevs.com">kuku.ragodevs.com</a></p>
+            <p><a href="{{.Url}}">{{.Url}}</a></p>
             <p>© 2025 Poult Management System. All rights reserved.</p>
         </div>
     </div>

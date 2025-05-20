@@ -126,10 +126,11 @@ func (app *application) createPasswordResetTokenHandler(c echo.Context) error {
 
 	app.background(func() {
 
-		dt := mail.ActivateOrResetData{
+		dt := mail.MailerData{
 			Name:  user.Name,
 			Email: user.Email,
 			Token: token.Plaintext,
+			Url: app.config.frontend_url,
 		}
 
 		if err := app.mailer.SendPasswordResetEmail(dt); err != nil {
@@ -182,10 +183,11 @@ func (app *application) resendActivationTokenHandler(c echo.Context) error {
 
 	app.background(func() {
 
-		dt := mail.ActivateOrResetData{
+		dt := mail.MailerData{
 			Name: user.Name,
 			Email: user.Email,
 			Token: token.Plaintext,
+			Url: app.config.frontend_url,
 		}
 
 		if err := app.mailer.SendActivateEmail(dt); err != nil {

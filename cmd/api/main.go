@@ -26,7 +26,7 @@ type config struct {
 		maxIdleConns int
 		maxIdleTime  string
 	}
-	mailer_url string
+	frontend_url string
 	emails     string
 	version    string
 }
@@ -63,7 +63,7 @@ func main() {
 	flag.IntVar(&cfg.db.maxIdleConns, "db-max-idle-conns", 25, "PostgreSQL max ilde connections")
 	flag.StringVar(&cfg.db.maxIdleTime, "db-max-idle-time", "15m", "PostgreSQL max connection  connections")
 	flag.StringVar(&cfg.emails, "admin-email", os.Getenv("ADMIN_EMAIL"), "admin email")
-	flag.StringVar(&cfg.mailer_url, "mail-url", os.Getenv("MAIL_URL"), "mail url ")
+	flag.StringVar(&cfg.frontend_url, "frontend-url", os.Getenv("FRONTEND_URL"), "frontend url ")
 	flag.StringVar(&ml.Host, "MAIL HOST", os.Getenv("EMAIL_HOST"), "MAIL HOST")
 	flag.StringVar(&ml.Port, "MAIL PORT", os.Getenv("EMAIL_PORT"), "MAIL PORT")
 	flag.StringVar(&ml.User, "MAIL USER ", os.Getenv("EMAIL_USER"), "MAIL USER")
