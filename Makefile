@@ -55,3 +55,8 @@ vendor:
 
 
 
+.PHONY: sqlc
+sqlc:
+	sqlc generate
+
+
