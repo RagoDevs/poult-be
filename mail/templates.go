@@ -443,7 +443,7 @@ const pwdreset_template = `
             <p>To reset your password, please click the button below:</p>
             
             <div style="text-align: center;">
-                <a href="https://kuku.ragodevs.com/reset?token={{.Token}}" class="button">Reset Password</a>
+                <a href="https://kuku.ragodevs.com/reset-password?token={{.Token}}" class="button">Reset Password</a>
             </div>
             
             <div class="important-note">
