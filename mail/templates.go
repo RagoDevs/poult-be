@@ -437,6 +437,7 @@ const pwdreset_template = `
         </div>
         
         <div class="content">
+            <p>Hello {{.Name}},</p>
             <p>We received a request to reset your password for your Poult Management System account. If you did not make this request, you can safely ignore this email.</p>
             
             <p>To reset your password, please click the button below:</p>
@@ -589,6 +590,7 @@ const completedreset_template = `
         </div>
         
         <div class="content">
+            <p>Hello {{.Name}},</p>
             <div style="text-align: center; margin-bottom: 20px;">
                 <span style="font-size: 48px; color: #4CAF50;">✓</span>
                 <h3 style="color: #4CAF50; margin-top: 10px;">Success!</h3>
