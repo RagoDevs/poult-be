@@ -239,6 +239,7 @@ func (app *application) updateUserPasswordOnResetHandler(c echo.Context) error {
 	app.background(func() {
 
 		dt := mail.ActivateOrResetData{
+			Name:  user.Name,
 			Email: user.Email,
 		}
 
