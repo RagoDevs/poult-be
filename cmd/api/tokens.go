@@ -43,7 +43,7 @@ func (app *application) createAuthenticationTokenHandler(c echo.Context) error {
 		switch {
 		case errors.Is(err, sql.ErrNoRows):
 			slog.Error("error fetching user by email", "error", err)
-			return c.JSON(http.StatusNotFound, envelope{"error": "invalid email number or password"})
+			return c.JSON(http.StatusNotFound, envelope{"error": "invalid email or password"})
 		default:
 			slog.Error("error fetching admin by phone number", "error", err)
 			return c.JSON(http.StatusInternalServerError, envelope{"error": "internal server error"})
@@ -53,6 +53,9 @@ func (app *application) createAuthenticationTokenHandler(c echo.Context) error {
 	if !user.Activated {
 		return c.JSON(http.StatusBadRequest, envelope{"error": "user not activated"})
 	}
+
+	// TO DO
+	// send activation email if user not activated
 
 	pwd := db.Password{
 		Hash:      user.PasswordHash,
@@ -69,7 +72,7 @@ func (app *application) createAuthenticationTokenHandler(c echo.Context) error {
 
 	if !match {
 		slog.Error("error matching password", "error", err)
-		return c.JSON(http.StatusUnauthorized, envelope{"error": "invalid phone number or password"})
+		return c.JSON(http.StatusUnauthorized, envelope{"error": "invalid email or password"})
 	}
 
 	expiry := time.Now().Add(3 * 24 * time.Hour)
