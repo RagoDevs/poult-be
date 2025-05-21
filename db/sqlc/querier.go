@@ -6,14 +6,36 @@ package db
 
 import (
 	"context"
+
+	"github.com/google/uuid"
 )
 
 type Querier interface {
 	CreateToken(ctx context.Context, arg CreateTokenParams) error
+	CreateTransaction(ctx context.Context, arg CreateTransactionParams) error
 	CreateUser(ctx context.Context, arg CreateUserParams) (CreateUserRow, error)
 	DeleteAllToken(ctx context.Context, arg DeleteAllTokenParams) error
+	DeleteCategory(ctx context.Context, id uuid.UUID) error
+	DeleteChicken(ctx context.Context, type_ ChickenType) error
+	DeleteChickenHistory(ctx context.Context, id uuid.UUID) error
+	DeleteTransaction(ctx context.Context, id uuid.UUID) error
+	GetCategories(ctx context.Context) ([]Category, error)
+	GetCategory(ctx context.Context, id uuid.UUID) (Category, error)
+	GetChicken(ctx context.Context, type_ ChickenType) (Chicken, error)
+	GetChickenHistories(ctx context.Context) ([]ChickenHistory, error)
+	GetChickenHistory(ctx context.Context, id uuid.UUID) (ChickenHistory, error)
+	GetChickens(ctx context.Context) ([]Chicken, error)
 	GetHashTokenForUser(ctx context.Context, arg GetHashTokenForUserParams) (GetHashTokenForUserRow, error)
+	GetTransaction(ctx context.Context, id uuid.UUID) (GetTransactionRow, error)
+	GetTransactions(ctx context.Context) ([]GetTransactionsRow, error)
 	GetUserByEmail(ctx context.Context, email string) (User, error)
+	InsertCategory(ctx context.Context, arg InsertCategoryParams) error
+	InsertChicken(ctx context.Context, arg InsertChickenParams) error
+	InsertChickenHistory(ctx context.Context, arg InsertChickenHistoryParams) error
+	UpdateCategory(ctx context.Context, arg UpdateCategoryParams) error
+	UpdateChickenById(ctx context.Context, arg UpdateChickenByIdParams) error
+	UpdateChickenHistory(ctx context.Context, arg UpdateChickenHistoryParams) error
+	UpdateTransaction(ctx context.Context, arg UpdateTransactionParams) error
 	UpdateUser(ctx context.Context, arg UpdateUserParams) (UpdateUserRow, error)
 }
 

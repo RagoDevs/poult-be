@@ -5,7 +5,6 @@
 package db
 
 import (
-	"database/sql"
 	"database/sql/driver"
 	"fmt"
 	"time"
@@ -145,25 +144,25 @@ func (ns NullTransactionType) Value() (driver.Value, error) {
 }
 
 type Category struct {
-	ID          uuid.UUID    `json:"id"`
-	Name        string       `json:"name"`
-	Description string       `json:"description"`
-	CreatedAt   sql.NullTime `json:"created_at"`
+	ID          uuid.UUID `json:"id"`
+	Name        string    `json:"name"`
+	Description string    `json:"description"`
+	CreatedAt   time.Time `json:"created_at"`
 }
 
 type Chicken struct {
-	ID        uuid.UUID    `json:"id"`
-	Type      ChickenType  `json:"type"`
-	Quantity  int32        `json:"quantity"`
-	UpdatedAt sql.NullTime `json:"updated_at"`
+	ID        uuid.UUID   `json:"id"`
+	Type      ChickenType `json:"type"`
+	Quantity  int32       `json:"quantity"`
+	UpdatedAt time.Time   `json:"updated_at"`
 }
 
 type ChickenHistory struct {
-	ID             uuid.UUID    `json:"id"`
-	ChickenType    ChickenType  `json:"chicken_type"`
-	QuantityChange int32        `json:"quantity_change"`
-	Reason         ReasonType   `json:"reason"`
-	CreatedAt      sql.NullTime `json:"created_at"`
+	ID             uuid.UUID   `json:"id"`
+	ChickenType    ChickenType `json:"chicken_type"`
+	QuantityChange int32       `json:"quantity_change"`
+	Reason         ReasonType  `json:"reason"`
+	CreatedAt      time.Time   `json:"created_at"`
 }
 
 type Token struct {
@@ -180,7 +179,7 @@ type Transaction struct {
 	Amount      int32           `json:"amount"`
 	Date        time.Time       `json:"date"`
 	Description string          `json:"description"`
-	CreatedAt   sql.NullTime    `json:"created_at"`
+	CreatedAt   time.Time       `json:"created_at"`
 }
 
 type User struct {

@@ -60,6 +60,9 @@ func (app *application) routes() http.Handler {
 
 	g.Use(app.authenticate)
 
+	g.GET("/chickens", app.getChickens)
+	g.PUT("/chickens/:id", app.UpdateChicken)
+
 	return e
 
 }
