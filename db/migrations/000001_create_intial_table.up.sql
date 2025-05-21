@@ -27,14 +27,14 @@ CREATE TABLE category (
     id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
     name TEXT NOT NULL UNIQUE,
     description TEXT NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE chicken (
     id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
     type chicken_type NOT NULL,
     quantity INTEGER NOT NULL DEFAULT 0,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT positive_quantity CHECK (quantity >= 0)
 );
 
@@ -45,7 +45,7 @@ CREATE TABLE transaction (
     amount INTEGER NOT NULL,
     date DATE NOT NULL,
     description TEXT NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE chicken_history (
@@ -53,7 +53,7 @@ CREATE TABLE chicken_history (
     chicken_type chicken_type NOT NULL,
     quantity_change INTEGER NOT NULL,
     reason reason_type NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 INSERT INTO category (name, description) VALUES
