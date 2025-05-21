@@ -19,10 +19,14 @@ type Querier interface {
 	DeleteChicken(ctx context.Context, type_ ChickenType) error
 	DeleteChickenHistory(ctx context.Context, id uuid.UUID) error
 	DeleteTransaction(ctx context.Context, id uuid.UUID) error
+	GetAllChickenHistories(ctx context.Context) ([]ChickenHistory, error)
 	GetCategories(ctx context.Context) ([]Category, error)
 	GetCategory(ctx context.Context, id uuid.UUID) (Category, error)
-	GetChicken(ctx context.Context, type_ ChickenType) (Chicken, error)
-	GetChickenHistories(ctx context.Context) ([]ChickenHistory, error)
+	GetChickenById(ctx context.Context, id uuid.UUID) (Chicken, error)
+	GetChickenByType(ctx context.Context, type_ ChickenType) (Chicken, error)
+	GetChickenHistories(ctx context.Context, dollar_1 ReasonType) ([]ChickenHistory, error)
+	GetChickenHistoriesByType(ctx context.Context, chickenType ChickenType) ([]ChickenHistory, error)
+	GetChickenHistoriesByTypeAndReason(ctx context.Context, arg GetChickenHistoriesByTypeAndReasonParams) ([]ChickenHistory, error)
 	GetChickenHistory(ctx context.Context, id uuid.UUID) (ChickenHistory, error)
 	GetChickens(ctx context.Context) ([]Chicken, error)
 	GetHashTokenForUser(ctx context.Context, arg GetHashTokenForUserParams) (GetHashTokenForUserRow, error)

@@ -62,6 +62,7 @@ func (app *application) routes() http.Handler {
 
 	g.GET("/chickens", app.getChickens)
 	g.PUT("/chickens/:id", app.UpdateChicken)
+	g.GET("/chicken-history", app.getChickenHistories)
 
 	return e
 

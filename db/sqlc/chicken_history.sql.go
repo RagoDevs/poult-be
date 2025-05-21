@@ -20,12 +20,119 @@ func (q *Queries) DeleteChickenHistory(ctx context.Context, id uuid.UUID) error 
 	return err
 }
 
-const getChickenHistories = `-- name: GetChickenHistories :many
+const getAllChickenHistories = `-- name: GetAllChickenHistories :many
 SELECT id, chicken_type, quantity_change, reason, created_at FROM chicken_history
 `
 
-func (q *Queries) GetChickenHistories(ctx context.Context) ([]ChickenHistory, error) {
-	rows, err := q.db.QueryContext(ctx, getChickenHistories)
+func (q *Queries) GetAllChickenHistories(ctx context.Context) ([]ChickenHistory, error) {
+	rows, err := q.db.QueryContext(ctx, getAllChickenHistories)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []ChickenHistory{}
+	for rows.Next() {
+		var i ChickenHistory
+		if err := rows.Scan(
+			&i.ID,
+			&i.ChickenType,
+			&i.QuantityChange,
+			&i.Reason,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getChickenHistories = `-- name: GetChickenHistories :many
+SELECT id, chicken_type, quantity_change, reason, created_at FROM chicken_history
+WHERE ($1::reason_type IS NULL OR reason = $1)
+`
+
+func (q *Queries) GetChickenHistories(ctx context.Context, dollar_1 ReasonType) ([]ChickenHistory, error) {
+	rows, err := q.db.QueryContext(ctx, getChickenHistories, dollar_1)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []ChickenHistory{}
+	for rows.Next() {
+		var i ChickenHistory
+		if err := rows.Scan(
+			&i.ID,
+			&i.ChickenType,
+			&i.QuantityChange,
+			&i.Reason,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getChickenHistoriesByType = `-- name: GetChickenHistoriesByType :many
+SELECT id, chicken_type, quantity_change, reason, created_at FROM chicken_history
+WHERE chicken_type = $1
+`
+
+func (q *Queries) GetChickenHistoriesByType(ctx context.Context, chickenType ChickenType) ([]ChickenHistory, error) {
+	rows, err := q.db.QueryContext(ctx, getChickenHistoriesByType, chickenType)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []ChickenHistory{}
+	for rows.Next() {
+		var i ChickenHistory
+		if err := rows.Scan(
+			&i.ID,
+			&i.ChickenType,
+			&i.QuantityChange,
+			&i.Reason,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getChickenHistoriesByTypeAndReason = `-- name: GetChickenHistoriesByTypeAndReason :many
+SELECT id, chicken_type, quantity_change, reason, created_at FROM chicken_history
+WHERE chicken_type = $1 AND reason = $2
+`
+
+type GetChickenHistoriesByTypeAndReasonParams struct {
+	ChickenType ChickenType `json:"chicken_type"`
+	Reason      ReasonType  `json:"reason"`
+}
+
+func (q *Queries) GetChickenHistoriesByTypeAndReason(ctx context.Context, arg GetChickenHistoriesByTypeAndReasonParams) ([]ChickenHistory, error) {
+	rows, err := q.db.QueryContext(ctx, getChickenHistoriesByTypeAndReason, arg.ChickenType, arg.Reason)
 	if err != nil {
 		return nil, err
 	}

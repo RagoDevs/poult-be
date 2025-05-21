@@ -20,12 +20,28 @@ func (q *Queries) DeleteChicken(ctx context.Context, type_ ChickenType) error {
 	return err
 }
 
-const getChicken = `-- name: GetChicken :one
+const getChickenById = `-- name: GetChickenById :one
+SELECT id, type, quantity, updated_at FROM chicken WHERE id = $1
+`
+
+func (q *Queries) GetChickenById(ctx context.Context, id uuid.UUID) (Chicken, error) {
+	row := q.db.QueryRowContext(ctx, getChickenById, id)
+	var i Chicken
+	err := row.Scan(
+		&i.ID,
+		&i.Type,
+		&i.Quantity,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const getChickenByType = `-- name: GetChickenByType :one
 SELECT id, type, quantity, updated_at FROM chicken WHERE type = $1
 `
 
-func (q *Queries) GetChicken(ctx context.Context, type_ ChickenType) (Chicken, error) {
-	row := q.db.QueryRowContext(ctx, getChicken, type_)
+func (q *Queries) GetChickenByType(ctx context.Context, type_ ChickenType) (Chicken, error) {
+	row := q.db.QueryRowContext(ctx, getChickenByType, type_)
 	var i Chicken
 	err := row.Scan(
 		&i.ID,
@@ -83,7 +99,7 @@ func (q *Queries) InsertChicken(ctx context.Context, arg InsertChickenParams) er
 }
 
 const updateChickenById = `-- name: UpdateChickenById :exec
-UPDATE chicken SET quantity = $2 WHERE id = $1
+UPDATE chicken SET quantity = quantity + $2 WHERE id = $1
 `
 
 type UpdateChickenByIdParams struct {
