@@ -68,6 +68,22 @@ func (q *Queries) GetCategory(ctx context.Context, id uuid.UUID) (Category, erro
 	return i, err
 }
 
+const getCategoryByName = `-- name: GetCategoryByName :one
+SELECT id, name, description, created_at FROM category WHERE name = $1
+`
+
+func (q *Queries) GetCategoryByName(ctx context.Context, name string) (Category, error) {
+	row := q.db.QueryRowContext(ctx, getCategoryByName, name)
+	var i Category
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Description,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
 const insertCategory = `-- name: InsertCategory :exec
 INSERT INTO category (name, description) VALUES ($1, $2)
 `

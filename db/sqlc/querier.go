@@ -22,6 +22,7 @@ type Querier interface {
 	GetAllChickenHistories(ctx context.Context) ([]ChickenHistory, error)
 	GetCategories(ctx context.Context) ([]Category, error)
 	GetCategory(ctx context.Context, id uuid.UUID) (Category, error)
+	GetCategoryByName(ctx context.Context, name string) (Category, error)
 	GetChickenById(ctx context.Context, id uuid.UUID) (Chicken, error)
 	GetChickenByType(ctx context.Context, type_ ChickenType) (Chicken, error)
 	GetChickenHistories(ctx context.Context, dollar_1 ReasonType) ([]ChickenHistory, error)

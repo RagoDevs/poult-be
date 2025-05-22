@@ -4,6 +4,9 @@ INSERT INTO category (name, description) VALUES ($1, $2);
 -- name: GetCategory :one
 SELECT * FROM category WHERE id = $1;
 
+-- name: GetCategoryByName :one
+SELECT * FROM category WHERE name = $1;
+
 -- name: GetCategories :many
 SELECT * FROM category;
 
