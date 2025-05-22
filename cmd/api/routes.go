@@ -64,6 +64,7 @@ func (app *application) routes() http.Handler {
 	g.PUT("/chickens/:id", app.UpdateChicken)
 	g.GET("/chicken-history", app.getChickenHistories)
 	g.POST("/transactions", app.addTxnTrackerhandler)
+	g.GET("/transactions/type/:transactionType", app.getTransactionsByTypeHandler)
 
 	return e
 

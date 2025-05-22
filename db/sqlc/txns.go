@@ -10,7 +10,7 @@ const CHICKEN_SALE = "chicken_sale"
 
 type TxnRequest struct {
 	Type           string          `json:"type" validate:"required,oneof=expense income"`
-	Category       string          `json:"category" validate:"required,oneof=food medicine chicken tools other"`
+	Category       string          `json:"category" validate:"required,oneof=food medicine chicken tools other salary"`
 	Amount         int32           `json:"amount" validate:"required,gt=0"`
 	Date           time.Time       `json:"date" validate:"required"`
 	Description    string          `json:"description" validate:"required"`
@@ -55,7 +55,7 @@ func (store *SQLStore) TxnCreateTransaction(ctx context.Context, args TxnRequest
 			}
 
 		} else if args.Category == "chicken" {
-			
+
 			ctg, err := qtx.GetCategoryByName(ctx, CHICKEN_PURCHASE)
 			if err != nil {
 				return err
@@ -81,7 +81,7 @@ func (store *SQLStore) TxnCreateTransaction(ctx context.Context, args TxnRequest
 
 				err = qtx.UpdateChickenById(ctx, UpdateChickenByIdParams{
 					ID:       chicken.ID,
-					Quantity: chicken.Quantity + *args.Quantity,
+					Quantity: *args.Quantity,
 				})
 				if err != nil {
 					return err
@@ -107,7 +107,7 @@ func (store *SQLStore) TxnCreateTransaction(ctx context.Context, args TxnRequest
 
 					err = qtx.UpdateChickenById(ctx, UpdateChickenByIdParams{
 						ID:       chicken.ID,
-						Quantity: chicken.Quantity + args.BulkQuantities.Hen,
+						Quantity: args.BulkQuantities.Hen,
 					})
 					if err != nil {
 						return err
@@ -131,7 +131,7 @@ func (store *SQLStore) TxnCreateTransaction(ctx context.Context, args TxnRequest
 
 					err = qtx.UpdateChickenById(ctx, UpdateChickenByIdParams{
 						ID:       chicken.ID,
-						Quantity: chicken.Quantity + args.BulkQuantities.Cock,
+						Quantity: args.BulkQuantities.Cock,
 					})
 					if err != nil {
 						return err
@@ -155,7 +155,7 @@ func (store *SQLStore) TxnCreateTransaction(ctx context.Context, args TxnRequest
 
 					err = qtx.UpdateChickenById(ctx, UpdateChickenByIdParams{
 						ID:       chicken.ID,
-						Quantity: chicken.Quantity + args.BulkQuantities.Chicks,
+						Quantity: args.BulkQuantities.Chicks,
 					})
 					if err != nil {
 						return err
@@ -176,7 +176,7 @@ func (store *SQLStore) TxnCreateTransaction(ctx context.Context, args TxnRequest
 		}
 
 	} else if args.Type == "income" {
-		
+
 		ctg, err := qtx.GetCategoryByName(ctx, CHICKEN_SALE)
 		if err != nil {
 			return err
@@ -202,7 +202,7 @@ func (store *SQLStore) TxnCreateTransaction(ctx context.Context, args TxnRequest
 
 			err = qtx.UpdateChickenById(ctx, UpdateChickenByIdParams{
 				ID:       chicken.ID,
-				Quantity: chicken.Quantity - *args.Quantity,
+				Quantity: -(*args.Quantity),
 			})
 			if err != nil {
 				return err
@@ -218,7 +218,7 @@ func (store *SQLStore) TxnCreateTransaction(ctx context.Context, args TxnRequest
 			}
 
 		} else if args.BulkQuantities != nil {
-			
+
 			if args.BulkQuantities.Hen > 0 {
 				chicken, err := qtx.GetChickenByType(ctx, ChickenType("hen"))
 				if err != nil {
@@ -227,7 +227,7 @@ func (store *SQLStore) TxnCreateTransaction(ctx context.Context, args TxnRequest
 
 				err = qtx.UpdateChickenById(ctx, UpdateChickenByIdParams{
 					ID:       chicken.ID,
-					Quantity: chicken.Quantity - args.BulkQuantities.Hen,
+					Quantity: -args.BulkQuantities.Hen,
 				})
 				if err != nil {
 					return err
@@ -251,7 +251,7 @@ func (store *SQLStore) TxnCreateTransaction(ctx context.Context, args TxnRequest
 
 				err = qtx.UpdateChickenById(ctx, UpdateChickenByIdParams{
 					ID:       chicken.ID,
-					Quantity: chicken.Quantity - args.BulkQuantities.Cock,
+					Quantity: -args.BulkQuantities.Cock,
 				})
 				if err != nil {
 					return err
@@ -275,7 +275,7 @@ func (store *SQLStore) TxnCreateTransaction(ctx context.Context, args TxnRequest
 
 				err = qtx.UpdateChickenById(ctx, UpdateChickenByIdParams{
 					ID:       chicken.ID,
-					Quantity: chicken.Quantity - args.BulkQuantities.Chicks,
+					Quantity: -args.BulkQuantities.Chicks,
 				})
 				if err != nil {
 					return err

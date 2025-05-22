@@ -62,7 +62,8 @@ INSERT INTO category (name, description) VALUES
     ('tools', 'Farm tools and equipment'),
     ('chicken_purchase', 'Chicken purchases'),
     ('chicken_sale', 'Chicken sales'),
-    ('salary', 'Supervisor salary');
+    ('salary', 'Supervisor salary'),
+    ('other', 'Other');
 
 INSERT INTO chicken (type, quantity) VALUES
     ('hen', 0),

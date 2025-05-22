@@ -124,6 +124,55 @@ func (q *Queries) GetTransactions(ctx context.Context) ([]GetTransactionsRow, er
 	return items, nil
 }
 
+const getTransactionsByType = `-- name: GetTransactionsByType :many
+SELECT transaction.id, transaction.type, transaction.category_id, transaction.amount, transaction.date, transaction.description, transaction.created_at, category.name as category_name 
+FROM transaction JOIN category ON transaction.category_id = category.id
+WHERE transaction.type = $1 ORDER BY transaction.created_at DESC
+`
+
+type GetTransactionsByTypeRow struct {
+	ID           uuid.UUID       `json:"id"`
+	Type         TransactionType `json:"type"`
+	CategoryID   uuid.UUID       `json:"category_id"`
+	Amount       int32           `json:"amount"`
+	Date         time.Time       `json:"date"`
+	Description  string          `json:"description"`
+	CreatedAt    time.Time       `json:"created_at"`
+	CategoryName string          `json:"category_name"`
+}
+
+func (q *Queries) GetTransactionsByType(ctx context.Context, type_ TransactionType) ([]GetTransactionsByTypeRow, error) {
+	rows, err := q.db.QueryContext(ctx, getTransactionsByType, type_)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []GetTransactionsByTypeRow{}
+	for rows.Next() {
+		var i GetTransactionsByTypeRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.Type,
+			&i.CategoryID,
+			&i.Amount,
+			&i.Date,
+			&i.Description,
+			&i.CreatedAt,
+			&i.CategoryName,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const updateTransaction = `-- name: UpdateTransaction :exec
 UPDATE transaction SET type = $2, category_id = $3, amount = $4, date = $5, description = $6 WHERE id = $1
 `
