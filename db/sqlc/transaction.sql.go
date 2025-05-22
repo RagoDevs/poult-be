@@ -44,6 +44,28 @@ func (q *Queries) DeleteTransaction(ctx context.Context, id uuid.UUID) error {
 	return err
 }
 
+const getTotalExpenses = `-- name: GetTotalExpenses :one
+SELECT COALESCE(SUM(amount), 0)::bigint AS total_expenses FROM transaction WHERE type = 'expense'
+`
+
+func (q *Queries) GetTotalExpenses(ctx context.Context) (int64, error) {
+	row := q.db.QueryRowContext(ctx, getTotalExpenses)
+	var total_expenses int64
+	err := row.Scan(&total_expenses)
+	return total_expenses, err
+}
+
+const getTotalIncome = `-- name: GetTotalIncome :one
+SELECT COALESCE(SUM(amount), 0)::bigint AS total_income FROM transaction WHERE type = 'income'
+`
+
+func (q *Queries) GetTotalIncome(ctx context.Context) (int64, error) {
+	row := q.db.QueryRowContext(ctx, getTotalIncome)
+	var total_income int64
+	err := row.Scan(&total_income)
+	return total_income, err
+}
+
 const getTransaction = `-- name: GetTransaction :one
 SELECT transaction.id, transaction.type, transaction.category_id, transaction.amount, transaction.date, transaction.description, transaction.created_at, category.name as category_name 
 FROM transaction JOIN category ON transaction.category_id = category.id WHERE transaction.id = $1

@@ -31,6 +31,8 @@ type Querier interface {
 	GetChickenHistory(ctx context.Context, id uuid.UUID) (ChickenHistory, error)
 	GetChickens(ctx context.Context) ([]Chicken, error)
 	GetHashTokenForUser(ctx context.Context, arg GetHashTokenForUserParams) (GetHashTokenForUserRow, error)
+	GetTotalExpenses(ctx context.Context) (int64, error)
+	GetTotalIncome(ctx context.Context) (int64, error)
 	GetTransaction(ctx context.Context, id uuid.UUID) (GetTransactionRow, error)
 	GetTransactions(ctx context.Context) ([]GetTransactionsRow, error)
 	GetTransactionsByType(ctx context.Context, type_ TransactionType) ([]GetTransactionsByTypeRow, error)

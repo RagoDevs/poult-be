@@ -48,3 +48,35 @@ func (app *application) getTransactionsByTypeHandler(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, transactions)
 }
+
+type financialSummaryResponse struct {
+	TotalIncome   int64 `json:"total_income"`
+	TotalExpenses int64 `json:"total_expenses"`
+	TotalProfit   int64 `json:"total_profit"`
+}
+
+func (app *application) getFinancialSummaryHandler(c echo.Context) error {
+	ctx := c.Request().Context()
+
+	totalIncome, err := app.store.GetTotalIncome(ctx)
+	if err != nil {
+		slog.Error("error fetching total income", "error", err)
+		return c.JSON(http.StatusInternalServerError, envelope{"error": "failed to retrieve total income"})
+	}
+
+	totalExpenses, err := app.store.GetTotalExpenses(ctx)
+	if err != nil {
+		slog.Error("error fetching total expenses", "error", err)
+		return c.JSON(http.StatusInternalServerError, envelope{"error": "failed to retrieve total expenses"})
+	}
+
+	totalProfit := totalIncome - totalExpenses
+
+	response := financialSummaryResponse{
+		TotalIncome:   totalIncome,
+		TotalExpenses: totalExpenses,
+		TotalProfit:   totalProfit,
+	}
+
+	return c.JSON(http.StatusOK, response)
+}
