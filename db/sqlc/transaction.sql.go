@@ -149,8 +149,15 @@ func (q *Queries) GetTransactions(ctx context.Context) ([]GetTransactionsRow, er
 const getTransactionsByType = `-- name: GetTransactionsByType :many
 SELECT transaction.id, transaction.type, transaction.category_id, transaction.amount, transaction.date, transaction.description, transaction.created_at, category.name as category_name 
 FROM transaction JOIN category ON transaction.category_id = category.id
-WHERE transaction.type = $1 ORDER BY transaction.created_at DESC
+WHERE transaction.type = $1
+AND ($2::text IS NULL OR category.name = $2)
+ORDER BY transaction.created_at DESC
 `
+
+type GetTransactionsByTypeParams struct {
+	Type         TransactionType `json:"type"`
+	CategoryName string          `json:"category_name"`
+}
 
 type GetTransactionsByTypeRow struct {
 	ID           uuid.UUID       `json:"id"`
@@ -163,8 +170,8 @@ type GetTransactionsByTypeRow struct {
 	CategoryName string          `json:"category_name"`
 }
 
-func (q *Queries) GetTransactionsByType(ctx context.Context, type_ TransactionType) ([]GetTransactionsByTypeRow, error) {
-	rows, err := q.db.QueryContext(ctx, getTransactionsByType, type_)
+func (q *Queries) GetTransactionsByType(ctx context.Context, arg GetTransactionsByTypeParams) ([]GetTransactionsByTypeRow, error) {
+	rows, err := q.db.QueryContext(ctx, getTransactionsByType, arg.Type, arg.CategoryName)
 	if err != nil {
 		return nil, err
 	}

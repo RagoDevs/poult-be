@@ -35,7 +35,7 @@ type Querier interface {
 	GetTotalIncome(ctx context.Context) (int64, error)
 	GetTransaction(ctx context.Context, id uuid.UUID) (GetTransactionRow, error)
 	GetTransactions(ctx context.Context) ([]GetTransactionsRow, error)
-	GetTransactionsByType(ctx context.Context, type_ TransactionType) ([]GetTransactionsByTypeRow, error)
+	GetTransactionsByType(ctx context.Context, arg GetTransactionsByTypeParams) ([]GetTransactionsByTypeRow, error)
 	GetUserByEmail(ctx context.Context, email string) (User, error)
 	InsertCategory(ctx context.Context, arg InsertCategoryParams) error
 	InsertChicken(ctx context.Context, arg InsertChickenParams) error

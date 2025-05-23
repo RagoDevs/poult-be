@@ -31,6 +31,7 @@ func (app *application) addTxnTrackerhandler(c echo.Context) error {
 
 func (app *application) getTransactionsByTypeHandler(c echo.Context) error {
 	transactionType := c.Param("transactionType")
+	categoryName := c.QueryParam("category_name")
 
 	if transactionType == "" {
 		return c.JSON(http.StatusBadRequest, envelope{"error": "transactionType path parameter is required"})
@@ -40,9 +41,19 @@ func (app *application) getTransactionsByTypeHandler(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, envelope{"error": "invalid transactionType. Must be 'expense' or 'income'"})
 	}
 
-	transactions, err := app.store.GetTransactionsByType(c.Request().Context(), db.TransactionType(transactionType))
+	// Create params struct for the query
+	params := db.GetTransactionsByTypeParams{
+		Type: db.TransactionType(transactionType),
+	}
+
+	// Only set CategoryName if it was provided in the query
+	if categoryName != "" {
+		params.CategoryName = categoryName
+	}
+
+	transactions, err := app.store.GetTransactionsByType(c.Request().Context(), params)
 	if err != nil {
-		slog.Error("error fetching transactions by type", "type", transactionType, "error", err)
+		slog.Error("error fetching transactions by type", "type", transactionType, "category", categoryName, "error", err)
 		return c.JSON(http.StatusInternalServerError, envelope{"error": "failed to retrieve transactions"})
 	}
 

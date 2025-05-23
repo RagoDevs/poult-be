@@ -18,7 +18,9 @@ DELETE FROM transaction WHERE id = $1;
 -- name: GetTransactionsByType :many
 SELECT transaction.*, category.name as category_name 
 FROM transaction JOIN category ON transaction.category_id = category.id
-WHERE transaction.type = $1 ORDER BY transaction.created_at DESC;
+WHERE transaction.type = $1
+AND (@category_name::text IS NULL OR category.name = @category_name)
+ORDER BY transaction.created_at DESC;
 
 -- name: GetTotalIncome :one
 SELECT COALESCE(SUM(amount), 0)::bigint AS total_income FROM transaction WHERE type = 'income';
