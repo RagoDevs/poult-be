@@ -19,7 +19,7 @@ DELETE FROM transaction WHERE id = $1;
 SELECT transaction.*, category.name as category_name 
 FROM transaction JOIN category ON transaction.category_id = category.id
 WHERE transaction.type = $1
-AND (@category_name::text IS NULL OR category.name = @category_name)
+AND (@category_name::text = '' OR category.name = @category_name)
 ORDER BY transaction.created_at DESC;
 
 -- name: GetTotalIncome :one

@@ -44,11 +44,7 @@ func (app *application) getTransactionsByTypeHandler(c echo.Context) error {
 	// Create params struct for the query
 	params := db.GetTransactionsByTypeParams{
 		Type: db.TransactionType(transactionType),
-	}
-
-	// Only set CategoryName if it was provided in the query
-	if categoryName != "" {
-		params.CategoryName = categoryName
+		CategoryName: categoryName, // Always set CategoryName, will be empty string when not provided
 	}
 
 	transactions, err := app.store.GetTransactionsByType(c.Request().Context(), params)

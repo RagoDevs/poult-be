@@ -150,7 +150,7 @@ const getTransactionsByType = `-- name: GetTransactionsByType :many
 SELECT transaction.id, transaction.type, transaction.category_id, transaction.amount, transaction.date, transaction.description, transaction.created_at, category.name as category_name 
 FROM transaction JOIN category ON transaction.category_id = category.id
 WHERE transaction.type = $1
-AND ($2::text IS NULL OR category.name = $2)
+AND ($2::text = '' OR category.name = $2)
 ORDER BY transaction.created_at DESC
 `
 
