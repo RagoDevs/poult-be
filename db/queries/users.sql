@@ -12,8 +12,8 @@ RETURNING id, created_at;
 
 -- name: UpdateUser :one
 UPDATE users
-SET email = $1, password_hash = $2, activated = $3
-WHERE id = $4
+SET name = $1, email = $2, password_hash = $3, activated = $4
+WHERE id = $5
 RETURNING id, created_at;
 
 

@@ -147,6 +147,7 @@ func (app *application) activateUserHandler(c echo.Context) error {
 	param := db.UpdateUserParams{
 
 		ID:           user.ID,
+		Name:         user.Name,
 		Email:        user.Email,
 		Activated:    true,
 		PasswordHash: user.PasswordHash,
@@ -271,6 +272,10 @@ func (app *application) updateUserNameOrPasswordHandler(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, envelope{"error": "at least one field is required"})
 	}
 
+	if (input.CurrentPassword != nil && input.NewPassword == nil) || (input.CurrentPassword == nil && input.NewPassword != nil) {
+		return c.JSON(http.StatusBadRequest, envelope{"error": "both current password and new password are required when changing password"})
+	}
+
 	if input.NewPassword != nil && len(*input.NewPassword) < 8 {
 		return c.JSON(http.StatusBadRequest, envelope{"error": "new password must be at least 8 characters long"})
 	}
@@ -286,36 +291,49 @@ func (app *application) updateUserNameOrPasswordHandler(c echo.Context) error {
 		}
 	}
 
-	match, err := db.PasswordMatches(db.Password{
-		Plaintext: *input.CurrentPassword,
-		Hash:      u.PasswordHash,
-	})
-	if err != nil {
-		slog.Error("error matching password", "error", err)
-		return c.JSON(http.StatusInternalServerError, envelope{"error": "internal server error"})
+	passwordHash := u.PasswordHash
+
+	if input.CurrentPassword != nil && input.NewPassword != nil {
+		match, err := db.PasswordMatches(db.Password{
+			Plaintext: *input.CurrentPassword,
+			Hash:      u.PasswordHash,
+		})
+		if err != nil {
+			slog.Error("error matching password", "error", err)
+			return c.JSON(http.StatusInternalServerError, envelope{"error": "internal server error"})
+		}
+
+		if !match {
+			return c.JSON(http.StatusUnauthorized, envelope{"error": "current password is incorrect"})
+		}
+
+		pwd, err := db.SetPassword(*input.NewPassword)
+		if err != nil {
+			slog.Error("error generating hash password", "error", err)
+			return c.JSON(http.StatusInternalServerError, envelope{"error": "internal server error"})
+		}
+
+		passwordHash = pwd.Hash
 	}
 
-	if !match {
-		return c.JSON(http.StatusUnauthorized, envelope{"error": "current password is incorrect"})
-	}
-
-	pwd, err := db.SetPassword(*input.NewPassword)
-	if err != nil {
-		slog.Error("error generating hash password", "error", err)
-		return c.JSON(http.StatusInternalServerError, envelope{"error": "internal server error"})
-	}
-
-	_, err = app.store.UpdateUser(c.Request().Context(), db.UpdateUserParams{
+	updateParams := db.UpdateUserParams{
 		ID:           u.ID,
-		Email:        u.Email,
-		PasswordHash: pwd.Hash,
+		PasswordHash: passwordHash,
 		Activated:    u.Activated,
-	})
+		Name:         u.Name,
+		Email:        u.Email,
+	}
+
+	if input.Name != nil {
+		updateParams.Name = *input.Name
+	}
+
+	_, err = app.store.UpdateUser(c.Request().Context(), updateParams)
 
 	if err != nil {
 		slog.Error("error updating user password", "error", err)
 		return c.JSON(http.StatusInternalServerError, envelope{"error": "internal server error"})
 	}
 
-	return c.JSON(http.StatusOK, envelope{"message": "password updated successfully"})
+	return c.JSON(http.StatusOK, envelope{"message": "user updated successfully"})
 }
