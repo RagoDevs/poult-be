@@ -12,95 +12,6 @@ import (
 	"github.com/google/uuid"
 )
 
-type ChickenType string
-
-const (
-	ChickenTypeHen    ChickenType = "hen"
-	ChickenTypeCock   ChickenType = "cock"
-	ChickenTypeChicks ChickenType = "chicks"
-)
-
-func (e *ChickenType) Scan(src interface{}) error {
-	switch s := src.(type) {
-	case []byte:
-		*e = ChickenType(s)
-	case string:
-		*e = ChickenType(s)
-	default:
-		return fmt.Errorf("unsupported scan type for ChickenType: %T", src)
-	}
-	return nil
-}
-
-type NullChickenType struct {
-	ChickenType ChickenType `json:"chicken_type"`
-	Valid       bool        `json:"valid"` // Valid is true if ChickenType is not NULL
-}
-
-// Scan implements the Scanner interface.
-func (ns *NullChickenType) Scan(value interface{}) error {
-	if value == nil {
-		ns.ChickenType, ns.Valid = "", false
-		return nil
-	}
-	ns.Valid = true
-	return ns.ChickenType.Scan(value)
-}
-
-// Value implements the driver Valuer interface.
-func (ns NullChickenType) Value() (driver.Value, error) {
-	if !ns.Valid {
-		return nil, nil
-	}
-	return string(ns.ChickenType), nil
-}
-
-type ReasonType string
-
-const (
-	ReasonTypePurchase ReasonType = "purchase"
-	ReasonTypeSale     ReasonType = "sale"
-	ReasonTypeBirth    ReasonType = "birth"
-	ReasonTypeDeath    ReasonType = "death"
-	ReasonTypeGift     ReasonType = "gift"
-	ReasonTypeOther    ReasonType = "other"
-)
-
-func (e *ReasonType) Scan(src interface{}) error {
-	switch s := src.(type) {
-	case []byte:
-		*e = ReasonType(s)
-	case string:
-		*e = ReasonType(s)
-	default:
-		return fmt.Errorf("unsupported scan type for ReasonType: %T", src)
-	}
-	return nil
-}
-
-type NullReasonType struct {
-	ReasonType ReasonType `json:"reason_type"`
-	Valid      bool       `json:"valid"` // Valid is true if ReasonType is not NULL
-}
-
-// Scan implements the Scanner interface.
-func (ns *NullReasonType) Scan(value interface{}) error {
-	if value == nil {
-		ns.ReasonType, ns.Valid = "", false
-		return nil
-	}
-	ns.Valid = true
-	return ns.ReasonType.Scan(value)
-}
-
-// Value implements the driver Valuer interface.
-func (ns NullReasonType) Value() (driver.Value, error) {
-	if !ns.Valid {
-		return nil, nil
-	}
-	return string(ns.ReasonType), nil
-}
-
 type TransactionType string
 
 const (
@@ -148,21 +59,6 @@ type Category struct {
 	Name        string    `json:"name"`
 	Description string    `json:"description"`
 	CreatedAt   time.Time `json:"created_at"`
-}
-
-type Chicken struct {
-	ID        uuid.UUID   `json:"id"`
-	Type      ChickenType `json:"type"`
-	Quantity  int32       `json:"quantity"`
-	UpdatedAt time.Time   `json:"updated_at"`
-}
-
-type ChickenHistory struct {
-	ID             uuid.UUID   `json:"id"`
-	ChickenType    ChickenType `json:"chicken_type"`
-	QuantityChange int32       `json:"quantity_change"`
-	Reason         ReasonType  `json:"reason"`
-	CreatedAt      time.Time   `json:"created_at"`
 }
 
 type Token struct {

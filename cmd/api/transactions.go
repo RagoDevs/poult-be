@@ -3,6 +3,7 @@ package main
 import (
 	"log/slog"
 	"net/http"
+	"time"
 
 	db "github.com/RagoDevs/poult-be/db/sqlc"
 	"github.com/labstack/echo/v4"
@@ -10,7 +11,13 @@ import (
 
 func (app *application) addTxnTrackerhandler(c echo.Context) error {
 
-	var input db.TxnRequest
+	var input struct {
+		Type        string    `json:"type" validate:"required,oneof=expense income"`
+		Category    string    `json:"category" validate:"required,oneof=food medicine chicken tools other salary"`
+		Amount      int32     `json:"amount" validate:"required,gt=0"`
+		Date        time.Time `json:"date" validate:"required"`
+		Description string    `json:"description" validate:"required"`
+	}
 
 	if err := c.Bind(&input); err != nil {
 		return c.JSON(http.StatusBadRequest, envelope{"error": err.Error()})
@@ -20,7 +27,19 @@ func (app *application) addTxnTrackerhandler(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, envelope{"error": err.Error()})
 	}
 
-	if err := app.store.TxnCreateTransaction(c.Request().Context(), input); err != nil {
+	category, err := app.store.GetCategoryByName(c.Request().Context(), input.Category)
+	if err != nil {
+		slog.Error("error fetching category", "error", err)
+		return c.JSON(http.StatusInternalServerError, envelope{"error": "internal server error"})
+	}
+
+	if err := app.store.CreateTransaction(c.Request().Context(), db.CreateTransactionParams{
+		Type:        db.TransactionType(input.Type),
+		CategoryID:  category.ID,
+		Amount:      input.Amount,
+		Date:        input.Date,
+		Description: input.Description,
+	}); err != nil {
 		slog.Error("error creating transaction", "error", err)
 		return c.JSON(http.StatusInternalServerError, envelope{"error": "internal server error"})
 	}
@@ -41,10 +60,9 @@ func (app *application) getTransactionsByTypeHandler(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, envelope{"error": "invalid transactionType. Must be 'expense' or 'income'"})
 	}
 
-	// Create params struct for the query
 	params := db.GetTransactionsByTypeParams{
-		Type: db.TransactionType(transactionType),
-		CategoryName: categoryName, // Always set CategoryName, will be empty string when not provided
+		Type:         db.TransactionType(transactionType),
+		CategoryName: categoryName,
 	}
 
 	transactions, err := app.store.GetTransactionsByType(c.Request().Context(), params)

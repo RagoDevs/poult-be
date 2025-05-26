@@ -58,12 +58,10 @@ func (app *application) routes() http.Handler {
 
 	g.Use(app.authenticate)
 
+	//User profile route
 	g.PUT("/users/profile", app.updateUserNameOrPasswordHandler)
 
-	// Chicken and transaction routes
-	g.GET("/chickens", app.getChickens)
-	g.PUT("/chickens/:id", app.UpdateChicken)
-	g.GET("/chicken-history", app.getChickenHistories)
+	//transaction routes
 	g.POST("/transactions", app.addTxnTrackerhandler)
 	g.GET("/transactions/type/:transactionType", app.getTransactionsByTypeHandler)
 	g.GET("/financial-summary", app.getFinancialSummaryHandler)
