@@ -13,7 +13,7 @@ func (app *application) addTxnTrackerhandler(c echo.Context) error {
 
 	var input struct {
 		Type        string    `json:"type" validate:"required,oneof=expense income"`
-		Category    string    `json:"category" validate:"required,oneof=food medicine chicken_purchase chicken_sale tools other salary"`
+		Category    string    `json:"category" validate:"required,oneof=food medicine chicken_purchase chicken_sale tools other salary egg_sale"`
 		Amount      int32     `json:"amount" validate:"required,gt=0"`
 		Date        time.Time `json:"date" validate:"required"`
 		Description string    `json:"description" validate:"required"`
