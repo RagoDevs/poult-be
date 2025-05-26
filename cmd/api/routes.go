@@ -41,20 +41,20 @@ func (app *application) routes() http.Handler {
 	e.Use(middleware.CORSWithConfig(DefaultCORSConfig))
 	e.Use(middleware.BodyLimit("2K"))
 
-	e.GET("/v1/ping", app.ping)
+	e.GET("/ping", app.ping)
 
 	// User Routes
 
-	e.POST("/v1/users", app.registerUserHandler)
-	e.PUT("/v1/users/activate", app.activateUserHandler)
-	e.POST("/v1/login", app.createAuthenticationTokenHandler)
-	e.POST("/v1/tokens/resend/activation", app.resendActivationTokenHandler)
+	e.POST("/users", app.registerUserHandler)
+	e.PUT("/users/activate", app.activateUserHandler)
+	e.POST("/login", app.createAuthenticationTokenHandler)
+	e.POST("/tokens/resend/activation", app.resendActivationTokenHandler)
 
 	// password management
-	e.POST("/v1/tokens/password/reset", app.createPasswordResetTokenHandler)
-	e.PUT("/v1/users/password/reset", app.updateUserPasswordOnResetHandler)
+	e.POST("/tokens/password/reset", app.createPasswordResetTokenHandler)
+	e.PUT("/users/password/reset", app.updateUserPasswordOnResetHandler)
 
-	g := e.Group("/v1/auth")
+	g := e.Group("/auth")
 
 	g.Use(app.authenticate)
 
