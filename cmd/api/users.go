@@ -255,7 +255,7 @@ func (app *application) updateUserPasswordOnResetHandler(c echo.Context) error {
 
 func (app *application) updateUserNameOrPasswordHandler(c echo.Context) error {
 
-	user := c.Get("user").(*db.GetHashTokenForUserRow)
+	user := c.Get("user").(db.GetHashTokenForUserRow)
 
 	var input struct {
 		Name            *string `json:"name"`
