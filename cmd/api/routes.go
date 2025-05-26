@@ -54,12 +54,13 @@ func (app *application) routes() http.Handler {
 	e.POST("/v1/tokens/password/reset", app.createPasswordResetTokenHandler)
 	e.PUT("/v1/users/password/reset", app.updateUserPasswordOnResetHandler)
 
-
-
 	g := e.Group("/v1/auth")
 
 	g.Use(app.authenticate)
 
+	g.PUT("/users/profile", app.updateUserNameOrPasswordHandler)
+
+	// Chicken and transaction routes
 	g.GET("/chickens", app.getChickens)
 	g.PUT("/chickens/:id", app.UpdateChicken)
 	g.GET("/chicken-history", app.getChickenHistories)
