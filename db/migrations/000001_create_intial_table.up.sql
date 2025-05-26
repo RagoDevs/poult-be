@@ -44,4 +44,5 @@ INSERT INTO category (name, description) VALUES
     ('chicken_purchase', 'Chicken purchases'),
     ('chicken_sale', 'Chicken sales'),
     ('salary', 'Supervisor salary'),
+    ('egg_sale', 'Egg sales'),
     ('other', 'Other');
