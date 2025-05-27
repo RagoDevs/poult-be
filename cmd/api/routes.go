@@ -60,6 +60,7 @@ func (app *application) routes() http.Handler {
 
 	//User profile route
 	g.PUT("/users/profile", app.updateUserNameOrPasswordHandler)
+	g.GET("/users/profile", app.getUserProfileHandler)
 
 	//transaction routes
 	g.POST("/transactions", app.addTxnTrackerhandler)

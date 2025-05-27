@@ -337,3 +337,8 @@ func (app *application) updateUserNameOrPasswordHandler(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, envelope{"message": "user updated successfully"})
 }
+
+func (app *application) getUserProfileHandler(c echo.Context) error {
+	user := c.Get("user").(db.GetHashTokenForUserRow)
+	return c.JSON(http.StatusOK, envelope{"name": user.Name, "email": user.Email})
+}
