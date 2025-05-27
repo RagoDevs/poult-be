@@ -1,0 +1,24 @@
+name: deploy poult backend app
+on: 
+  push:
+    branches:
+      - "main"
+      
+jobs:
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: executing remote ssh commands 
+      uses: appleboy/ssh-action@v1.1.0
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.PORT }}
+        script: |
+          cd /home/${{ secrets.USERNAME }}/projects/poult-be
+          git pull
+          go mod tidy
+          echo "${{ secrets.PASSWORD }}" | sudo -S systemctl restart kuku.service
+          sudo systemctl status kuku.service
