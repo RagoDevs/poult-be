@@ -33,6 +33,18 @@ func (app *application) addTxnTrackerhandler(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, envelope{"error": "internal server error"})
 	}
 
+	if input.Type == "income" {
+		if input.Category != "chicken_sale" && input.Category != "egg_sale" {
+			return c.JSON(http.StatusBadRequest, envelope{"error": "category must be chicken_sale or egg_sale for income"})
+		}
+	}
+
+	if input.Type == "expense" {
+		if input.Category != "chicken_purchase" && input.Category != "tools" && input.Category != "medicine" && input.Category != "food" && input.Category != "salary" && input.Category != "other" {
+			return c.JSON(http.StatusBadRequest, envelope{"error": "category must be chicken_purchase, tools, medicine, food, salary, or other for expense"})
+		}
+	}
+
 	if err := app.store.CreateTransaction(c.Request().Context(), db.CreateTransactionParams{
 		Type:        db.TransactionType(input.Type),
 		CategoryID:  category.ID,
