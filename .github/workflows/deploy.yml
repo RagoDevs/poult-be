@@ -19,6 +19,7 @@ jobs:
         script: |
           cd /home/${{ secrets.USERNAME }}/projects/poult-be
           git pull
+          export PATH=$PATH:/usr/local/go/bin
           go mod tidy
-          echo "${{ secrets.PASSWORD }}" | sudo -S systemctl restart kuku.service
-          sudo systemctl status kuku.service
+          echo '${{ secrets.PASSWORD }}' | sudo -S systemctl restart kuku.service
+          echo '${{ secrets.PASSWORD }}' | sudo -S systemctl status kuku.service
