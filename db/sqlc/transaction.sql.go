@@ -147,11 +147,17 @@ func (q *Queries) GetTransactions(ctx context.Context) ([]GetTransactionsRow, er
 }
 
 const getTransactionsByType = `-- name: GetTransactionsByType :many
-SELECT transaction.id, transaction.type, transaction.category_id, transaction.amount, transaction.date, transaction.description, transaction.created_at, category.name as category_name 
-FROM transaction JOIN category ON transaction.category_id = category.id
-WHERE transaction.type = $1
-AND ($2::text = '' OR category.name = $2)
-ORDER BY transaction.created_at DESC
+WITH filtered_transactions AS (
+    SELECT transaction.id, transaction.type, transaction.category_id, transaction.amount, transaction.date, transaction.description, transaction.created_at, category.name as category_name 
+    FROM transaction JOIN category ON transaction.category_id = category.id
+    WHERE transaction.type = $1
+    AND ($2::text = '' OR category.name = $2)
+)
+SELECT 
+    t.id, t.type, t.category_id, t.amount, t.date, t.description, t.created_at, t.category_name,
+    (SELECT COALESCE(SUM(amount), 0)::bigint FROM filtered_transactions) AS total_sum
+FROM filtered_transactions t
+ORDER BY t.created_at DESC
 `
 
 type GetTransactionsByTypeParams struct {
@@ -168,6 +174,7 @@ type GetTransactionsByTypeRow struct {
 	Description  string          `json:"description"`
 	CreatedAt    time.Time       `json:"created_at"`
 	CategoryName string          `json:"category_name"`
+	TotalSum     int64           `json:"total_sum"`
 }
 
 func (q *Queries) GetTransactionsByType(ctx context.Context, arg GetTransactionsByTypeParams) ([]GetTransactionsByTypeRow, error) {
@@ -188,6 +195,7 @@ func (q *Queries) GetTransactionsByType(ctx context.Context, arg GetTransactions
 			&i.Description,
 			&i.CreatedAt,
 			&i.CategoryName,
+			&i.TotalSum,
 		); err != nil {
 			return nil, err
 		}

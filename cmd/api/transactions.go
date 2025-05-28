@@ -84,7 +84,12 @@ func (app *application) getTransactionsByTypeHandler(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, envelope{"error": "failed to retrieve transactions"})
 	}
 
-	return c.JSON(http.StatusOK, transactions)
+	var totalSum int64
+	if len(transactions) > 0 {
+		totalSum = transactions[0].TotalSum
+	}
+
+	return c.JSON(http.StatusOK, envelope{"transactions": transactions, "total_sum": totalSum})
 }
 
 type financialSummaryResponse struct {
